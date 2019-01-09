@@ -1,0 +1,5 @@
+{
+    port: 3000,
+    url: 'YOUR_URL_HERE',
+    token: 'YOUR_TOKEN_HERE'
+}
