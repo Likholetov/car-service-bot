@@ -1,5 +1,6 @@
 {
     port: 3000,
     url: 'YOUR_URL_HERE',
-    token: 'YOUR_TOKEN_HERE'
+    token: 'YOUR_TOKEN_HERE',
+    db_url: 'YOUR_MONGODB_URL_HERE'
 }

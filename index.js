@@ -1,10 +1,28 @@
+// Основные зависимости
 import TelegramBot from 'node-telegram-bot-api'
 import config from 'config'
+import mongoose from 'mongoose'
+// Зависимости необходимые для работы с Webhook
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 
+// подключение MongoDB
+mongoose.connect(config.get('db_url'), {
+    useNewUrlParser: true
+})
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.log(err))
+
 const TOKEN = config.get('token')
+
+// для работы с  Update
+const bot = new TelegramBot(TOKEN, {
+    polling: true
+})
+
+// для работы с Webhook
+/*
 const bot = new TelegramBot(TOKEN)
 bot.setWebHook(`${config.get('url')}/bot`)
 
@@ -23,7 +41,9 @@ app.use(router.routes())
 const port = config.get('port')
 app.listen(port, () => {
     console.log(`Listening on ${port}`)
-})
+})*/
+
+// Bot functions
 
 bot.on('message', msg => {
     const { chat: { id } } = msg
