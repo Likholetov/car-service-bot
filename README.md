@@ -8,7 +8,7 @@ Thanks to: [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-ap
 ## How to use the bot
 
 * Clone/Download/Fork the repository
-* ```npm install```
+* ```yarn```
 * Create a Bot Account 
     * Get the associated token (https://core.telegram.org/bots/#botfather)
 * Remove part "-example" in config-example.js
@@ -16,5 +16,5 @@ Thanks to: [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-ap
     * Set ```YOUR_TELEGRAM_BOT_TOKEN``` with the auth token of your bot
     * Set ```MONGODB_URL``` with your MongoDB url
 * Run the bot
-    * ```npm run start``` 
+    * ```yarn run start``` 
     * Stop it at any time with CTRL+C
