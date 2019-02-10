@@ -7,6 +7,9 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 
+// Контроллеры
+
+
 // подключение MongoDB
 mongoose.connect(config.get('db_url'), {
     useNewUrlParser: true
