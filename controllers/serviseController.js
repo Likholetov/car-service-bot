@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-
-require('../models/service.model')
+import mongoose from 'mongoose'
+import '../models/service.model'
 
 const Service = mongoose.model('services')
 
@@ -8,4 +7,4 @@ class ServiceController {
     
 }
 
-module.exports = new ServiceController()
+export default new ServiceController()

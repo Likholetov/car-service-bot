@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-
-require('../models/order.model')
+import mongoose from 'mongoose'
+import '../models/order.model'
 
 const Order = mongoose.model('orders')
 
@@ -8,4 +7,4 @@ class OrderController {
     
 }
 
-module.exports = new OrderController()
+export default new OrderController()

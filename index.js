@@ -8,7 +8,9 @@ import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 
 // Контроллеры
-
+import PartController from './controllers/partController'
+import OrderController from './controllers/orderController'
+import ServiceController from './controllers/serviseController'
 
 // подключение MongoDB
 mongoose.connect(config.get('db_url'), {
