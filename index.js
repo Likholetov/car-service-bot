@@ -2,6 +2,7 @@
 import TelegramBot from 'node-telegram-bot-api'
 import config from 'config'
 import mongoose from 'mongoose'
+
 // Зависимости необходимые для работы с Webhook
 import Koa from 'koa'
 import Router from 'koa-router'
@@ -58,4 +59,24 @@ bot.on('message', msg => {
 bot.onText(/\/help (.+)/, (msg, [source, match]) => {
     const { chat: { id } } = msg
     bot.sendMessage(id, match)
+})
+
+bot.on('inline_query', query => {
+    const results = []
+
+    for (let index = 0; index < 3; index++) {
+        results.push({
+            id: index.toString(),
+            type: 'article',
+            title: `Title #${index}`,
+            input_message_content: {
+                message_text: `Article #${index} content`
+            }
+        })
+        
+    }
+
+    bot.answerInlineQuery(query.id, results, {
+        cache_time: 0
+    })
 })
