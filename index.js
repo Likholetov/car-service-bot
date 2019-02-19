@@ -53,12 +53,18 @@ app.listen(port, () => {
 
 bot.on('message', msg => {
     const { chat: { id } } = msg
+    console.log(`Message from ${msg.from.first_name} ${msg.from.last_name}, id: ${msg.from.id}`)
     bot.sendMessage(id, 'Pong')
 })
 
 bot.onText(/\/help (.+)/, (msg, [source, match]) => {
     const { chat: { id } } = msg
     bot.sendMessage(id, match)
+})
+
+bot.onText(/\/start (.+)/, (msg, [source, match]) => {
+    const { chat: { id } } = msg
+    bot.sendMessage(id, `You told me "${match}"`)
 })
 
 bot.on('inline_query', query => {
@@ -77,6 +83,8 @@ bot.on('inline_query', query => {
     }
 
     bot.answerInlineQuery(query.id, results, {
-        cache_time: 0
+        cache_time: 0,
+        switch_pm_text: 'Перейти к диалогу с ботом',
+        switch_pm_parameter: 'start'
     })
 })
