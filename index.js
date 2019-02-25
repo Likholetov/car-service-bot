@@ -11,7 +11,7 @@ import bodyParser from 'koa-bodyparser'
 // Контроллеры
 import PartController from './controllers/partController'
 import OrderController from './controllers/orderController'
-import ServiceController from './controllers/serviseController'
+import ServiceController from './controllers/serviceController'
 
 // подключение MongoDB
 mongoose.connect(config.get('db_url'), {
@@ -49,12 +49,28 @@ app.listen(port, () => {
     console.log(`Listening on ${port}`)
 })*/
 
-// Bot functions
+// Функции
 
 bot.on('message', msg => {
     const { chat: { id } } = msg
-    console.log(`Message from ${msg.from.first_name} ${msg.from.last_name}, id: ${msg.from.id}`)
-    bot.sendMessage(id, 'Pong')
+    const { text } = msg
+    const { from: {first_name} } = msg
+    const { from: {last_name} } = msg
+
+    console.log(`Message from ${first_name} ${last_name}, id: ${id}`)
+    
+
+    // Ответ на входящий текст
+    switch(text){
+        case 'text':
+            
+            break   
+        }
+    
+    
+    if(msg.location){
+
+    }
 })
 
 bot.onText(/\/help (.+)/, (msg, [source, match]) => {
