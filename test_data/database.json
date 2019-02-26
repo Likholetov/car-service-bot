@@ -1,0 +1,106 @@
+{
+  "parts": [
+    {
+      "name": "деталь 1",
+      "price": 100,
+      "type": "тип 1",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 2"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 1",
+      "price": 100,
+      "type": "тип 1",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 3"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 2",
+      "price": 100,
+      "type": "тип 1",
+      "brand": "LADA",
+      "cars": ["машина 2", "машина 3"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 2"
+    },
+    {
+      "name": "деталь 3",
+      "price": 100,
+      "type": "тип 2",
+      "brand": "BMW",
+      "cars": ["машина 4", "машина 5"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 4",
+      "price": 100,
+      "type": "тип 1",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 2"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 5",
+      "price": 100,
+      "type": "тип 2",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 2"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 6",
+      "price": 100,
+      "type": "тип 1",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 2"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    },
+    {
+      "name": "деталь 7",
+      "price": 100,
+      "type": "тип 3",
+      "brand": "LADA",
+      "cars": ["машина 1", "машина 2"],
+      "installation": 50,
+      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
+      "about": "описание детали 1"
+    }
+  ],
+  "services": [
+    {
+      "name": "Замена масла",
+      "price": 100,
+      "about": "Замена масла"
+    },
+    {
+      "name": "Замена масла",
+      "price": 100,
+      "about": "Замена масла"
+    },
+    {
+      "name": "Замена масла",
+      "price": 100,
+      "about": "Замена масла"
+    },
+    {
+      "name": "Замена масла",
+      "price": 100,
+      "about": "Замена масла"
+    }
+  ]
+}
