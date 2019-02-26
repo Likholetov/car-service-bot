@@ -91,7 +91,7 @@ bot.on('message', async msg => {
             break   
         case 'Запчасти':
             const brands = await PartController.uniqBrand()
-            const brandKeyboard = await PartController.inlineKeyboard(brands)
+            const brandKeyboard = inlineKeyboard(brands)
             bot.sendMessage(id, `Пожалуйста, выберите марку автомобиля`, {reply_markup:brandKeyboard})
             break 
         case 'Ваш заказ':
@@ -110,6 +110,8 @@ bot.on('callback_query', async query => {
 
     // массив марок
     const brands = await PartController.uniqBrand()
+    // массив машин
+    const cars = await PartController.carsOfBrand({})
 
     // получаем id пользователя
     const { from: { id } } = query
@@ -124,6 +126,10 @@ bot.on('callback_query', async query => {
     } else {
         console.log("no")
     }
+
+    //const cars = await PartController.carsOfBrand({brand: "LADA"})
+    
+    //console.log(cars)
 
 
 })
@@ -149,3 +155,22 @@ bot.on('inline_query', query => {
         switch_pm_parameter: 'start'
     })
 })
+
+// формирование инлайн клавиатуры из массива
+function inlineKeyboard(buttons) {
+    // формирование кнопок
+    buttons = buttons.map(b => [
+        { text: b, 
+            callback_data: JSON.stringify({
+            text: b
+        })}
+    ])
+
+    // формирование клавиатуры 
+    buttons = {
+        inline_keyboard: buttons
+    }
+
+    // возврат клавиатуры типов
+    return buttons
+}

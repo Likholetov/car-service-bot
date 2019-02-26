@@ -5,7 +5,8 @@ import '../models/part.model'
 const Part = mongoose.model('parts')
 
 class PartController {
-    // Формируем клавиатуру марок автомобилей
+
+    // формируем список марок автомобилей из базы данных
     async uniqBrand() {
         // получаем из БД все детали
         const parts = await Part.find({})
@@ -22,22 +23,21 @@ class PartController {
         return brands
     }
 
-    inlineKeyboard(buttons) {
-        // формирование кнопок
-        buttons = buttons.map(b => [
-            { text: b, 
-                callback_data: JSON.stringify({
-                text: b
-            })}
-        ])
-    
-        // формирование клавиатуры 
-        buttons = {
-            inline_keyboard: buttons
-        }
-    
-        // возврат клавиатуры типов
-        return buttons
+    // получение машин конкретной марки
+    async carsOfBrand(brand) {
+        // получаем из БД все детали
+        const parts = await Part.find(brand)
+      
+        // массив для марок
+        let cars = []
+
+        // формирование массива брендов
+        parts.map(p => cars = _.union(cars, p.cars))
+
+        // удаление повторяющихся типов
+        cars = _.uniq(cars);
+
+        return cars
     }
 }
 
