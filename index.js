@@ -13,6 +13,17 @@ import PartController from './controllers/partController'
 import OrderController from './controllers/orderController'
 import ServiceController from './controllers/serviceController'
 
+// Клавиатура
+const mainKeyboard = {
+    reply_markup: {
+        resize_keyboard: true,
+        keyboard: [
+                ['Услуги', 'Запчасти'],
+                ['Ваш заказ', 'О нас']
+            ]
+    }
+}
+
 // подключение MongoDB
 mongoose.connect(config.get('db_url'), {
     useNewUrlParser: true
@@ -51,36 +62,70 @@ app.listen(port, () => {
 
 // Функции
 
-bot.on('message', msg => {
+// Обработка входящих сообщений
+
+// Обработка команды /start
+bot.onText(/\/start/, (msg) => {
     const { chat: { id } } = msg
-    const { text } = msg
-    const { from: {first_name} } = msg
-    const { from: {last_name} } = msg
+    bot.sendMessage(id, `Здравствуйте!`, mainKeyboard)
+})
+
+// Обработка команды /help
+bot.onText(/\/help/, (msg) => {
+    const { chat: { id } } = msg
+    bot.sendMessage(id, `Помощь`)
+})
+
+// Клавиатура
+bot.on('message', async msg => {
+
+    // Получаем данные о пользователе
+    const { chat: { id }, text, from: {first_name, last_name} } = msg
 
     console.log(`Message from ${first_name} ${last_name}, id: ${id}`)
     
-
     // Ответ на входящий текст
     switch(text){
-        case 'text':
-            
+        case 'Услуги':
+            //bot.sendMessage(id, `Здравствуйте!`, mainKeyboard)
             break   
+        case 'Запчасти':
+            const brands = await PartController.uniqBrand()
+            const brandKeyboard = await PartController.inlineKeyboard(brands)
+            bot.sendMessage(id, `Пожалуйста, выберите марку автомобиля`, {reply_markup:brandKeyboard})
+            break 
+        case 'Ваш заказ':
+            
+            break
+        case 'О нас':
+            
+            break
+        default:
+            bot.sendMessage(id, `К сожалению, я не знаю такой команды`)
         }
-    
-    
-    if(msg.location){
+})
 
+// Инлайн клавиатура
+bot.on('callback_query', async query => {
+
+    // массив марок
+    const brands = await PartController.uniqBrand()
+
+    // получаем id пользователя
+    const { from: { id } } = query
+
+    // парсим входящий JSON
+    let { data } = query
+    data = JSON.parse(data)
+    const { text } = data
+
+    if(brands.indexOf( text ) != -1) {
+        console.log("yes")
+    } else {
+        console.log("no")
     }
-})
 
-bot.onText(/\/help (.+)/, (msg, [source, match]) => {
-    const { chat: { id } } = msg
-    bot.sendMessage(id, match)
-})
 
-bot.onText(/\/start (.+)/, (msg, [source, match]) => {
-    const { chat: { id } } = msg
-    bot.sendMessage(id, `You told me "${match}"`)
 })
 
 bot.on('inline_query', query => {

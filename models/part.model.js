@@ -1,4 +1,4 @@
-import { Schema as Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const PartSchema = new Schema({
     name: {
@@ -13,6 +13,10 @@ const PartSchema = new Schema({
         type: String,
         required: true
     },
+    brand: {
+        type: String,
+        required: true
+    },
     cars: {
         type: [String],
         default: [],
@@ -20,6 +24,14 @@ const PartSchema = new Schema({
     },
     installation: {
         type: Number,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    about: {
+        type: String,
         required: true
     }
 })

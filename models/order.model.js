@@ -1,4 +1,4 @@
-import { Schema as Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import partSchema from "./part.model";
 
 const OrderSchema = new Schema({

@@ -1,4 +1,4 @@
-import { Schema as Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const ServiceSchema = new Schema({
     name: {
