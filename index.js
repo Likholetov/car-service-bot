@@ -100,8 +100,8 @@ bot.on('message', async msg => {
         case 'О нас':
             
             break
-        default:
-            bot.sendMessage(id, `К сожалению, я не знаю такой команды`)
+        //default:
+            //bot.sendMessage(id, `К сожалению, я не знаю такой команды`)
         }
 })
 
@@ -122,9 +122,16 @@ bot.on('callback_query', async query => {
     const { text } = data
 
     if(brands.indexOf( text ) != -1) {
-        console.log("yes")
+        const carsOfBrand = await PartController.carsOfBrand({brand: text})
+        const carsKeyboard = inlineKeyboard(carsOfBrand)
+        bot.sendMessage(id, `Пожалуйста, выберите модель автомобиля`, {reply_markup:carsKeyboard})
+
     } else {
-        console.log("no")
+        if (cars.indexOf( text ) != -1) {
+            
+        } else {
+            
+        }
     }
 
     //const cars = await PartController.carsOfBrand({brand: "LADA"})
