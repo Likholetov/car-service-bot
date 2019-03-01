@@ -91,7 +91,7 @@ bot.on('message', async msg => {
             break   
         case 'Запчасти':
             const brands = await PartController.uniqBrand()
-            const brandKeyboard = inlineKeyboard(brands)
+            const brandKeyboard = inlineKeyboard(brands, "nothing")
             bot.sendMessage(id, `Пожалуйста, выберите марку автомобиля`, {reply_markup:brandKeyboard})
             break 
         case 'Ваш заказ':
@@ -112,6 +112,8 @@ bot.on('callback_query', async query => {
     const brands = await PartController.uniqBrand()
     // массив машин
     const cars = await PartController.carsOfBrand({})
+    // массив типов деталей
+    const types = await PartController.typesOfParts({})
 
     // получаем id пользователя
     const { from: { id } } = query
@@ -119,18 +121,31 @@ bot.on('callback_query', async query => {
     // парсим входящий JSON
     let { data } = query
     data = JSON.parse(data)
-    const { text } = data
+    const { text, addition } = data
 
+    // проверяем, что пришло на вход
     if(brands.indexOf( text ) != -1) {
+        // пришла марка автомобиля
+        // получаем все автомобили этой марки
         const carsOfBrand = await PartController.carsOfBrand({brand: text})
-        const carsKeyboard = inlineKeyboard(carsOfBrand)
+        // создаем клавиатуру автомобилей
+        const carsKeyboard = inlineKeyboard(carsOfBrand, text)
+        // отправляем клавиатуру пользователю
         bot.sendMessage(id, `Пожалуйста, выберите модель автомобиля`, {reply_markup:carsKeyboard})
-
     } else {
         if (cars.indexOf( text ) != -1) {
-            
+            // пришла модель автомобиля
+            const typesOfParts = await PartController.typesOfParts({cars: { $all: [text] }})
+            const typesKeyboard = inlineKeyboard(typesOfParts, text)
+            bot.sendMessage(id, `Пожалуйста, выберите тип необходимой детали`, {reply_markup:typesKeyboard})
         } else {
-            
+            if (types.indexOf( text ) != -1) {
+                // пришел тип детали
+                const partsOfType = await PartController.partsOfType({type: text, cars: { $all: [addition] }})
+                console.log(partsOfType)
+            } else {
+                
+            }
         }
     }
 
@@ -141,7 +156,7 @@ bot.on('callback_query', async query => {
 
 })
 
-bot.on('inline_query', query => {
+/*bot.on('inline_query', query => {
     const results = []
 
     for (let index = 0; index < 3; index++) {
@@ -161,15 +176,16 @@ bot.on('inline_query', query => {
         switch_pm_text: 'Перейти к диалогу с ботом',
         switch_pm_parameter: 'start'
     })
-})
+})*/
 
 // формирование инлайн клавиатуры из массива
-function inlineKeyboard(buttons) {
+function inlineKeyboard(buttons, addition) {
     // формирование кнопок
     buttons = buttons.map(b => [
         { text: b, 
             callback_data: JSON.stringify({
-            text: b
+                text: b,
+                addition: addition
         })}
     ])
 

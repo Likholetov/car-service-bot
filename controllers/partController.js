@@ -23,7 +23,7 @@ class PartController {
         return brands
     }
 
-    // получение машин конкретной марки
+    // получение автомобилей конкретной марки
     async carsOfBrand(brand) {
         // получаем из БД все детали
         const parts = await Part.find(brand)
@@ -34,27 +34,47 @@ class PartController {
         // формирование массива брендов
         parts.map(p => cars = _.union(cars, p.cars))
 
-        // удаление повторяющихся типов
-        cars = _.uniq(cars);
-
         return cars
     }
 
-    // получение машин конкретной марки
-    async typesOfParts(brand, car) {
+    // получение типов деталей конкретной модели
+    async typesOfParts(car) {
         // получаем из БД все детали
-        const parts = await Part.find(brand)
+        const parts = await Part.find(car)
           
         // массив для марок
-        let cars = []
+        let types = []
     
         // формирование массива брендов
-        parts.map(p => cars = _.union(cars, p.cars))
+        parts.map(p => types.push(p.type))
     
         // удаление повторяющихся типов
-        cars = _.uniq(cars);
+        types = _.uniq(types);
     
-        return cars
+        return types
+    }
+
+        // получение типов деталей конкретной модели
+    async typesOfParts(car) {
+        // получаем из БД все детали
+        const parts = await Part.find(car)
+          
+        // массив для марок
+        let types = []
+    
+        // формирование массива брендов
+        parts.map(p => types.push(p.type))
+    
+        // удаление повторяющихся типов
+        types = _.uniq(types);
+    
+        return types
+    }
+
+    // получение деталей конкретного типа
+    partsOfType(type) {
+        // получаем из БД все детали
+        return Part.find(type)
     }
 }
 
