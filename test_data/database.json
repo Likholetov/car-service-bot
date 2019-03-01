@@ -1,84 +1,104 @@
 {
   "parts": [
     {
-      "name": "деталь 1",
-      "price": 100,
-      "type": "тип 1",
-      "brand": "LADA",
-      "cars": ["машина 1", "машина 2"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "name": "STA1000 Krauf",
+      "price": 2800,
+      "type": "Стартеры",
+      "brand": "KIA",
+      "cars": ["CLARUS (K9A)", "MENTOR (FA)"],
+      "installation": 300,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/krauf/STA1000-380x380.jpg",
+      "about": "Напряжение (V) 12, KW 0.9, Направление вращения (R) CR"
     },
     {
-      "name": "деталь 1",
-      "price": 100,
-      "type": "тип 1",
-      "brand": "LADA",
-      "cars": ["машина 1", "машина 3"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "name": "17469N Wps",
+      "price": 4000,
+      "type": "Стартеры",
+      "brand": "KIA",
+      "cars": ["CLARUS (K9A)", "MENTOR (FA)"],
+      "installation": 300,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/wps/17469N-380x380.jpg",
+      "about": "Напряжение (V) 12, KW 0.9, Направление вращения (R) CR"
     },
     {
-      "name": "деталь 2",
-      "price": 100,
-      "type": "тип 1",
-      "brand": "LADA",
-      "cars": ["машина 2", "машина 3"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 2"
+      "name": "880186 Era",
+      "price": 1200,
+      "type": "Катушки зажигания",
+      "brand": "KIA",
+      "cars": ["CLARUS (K9A)", "MENTOR (FA)"],
+      "installation": 0,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/era/880186-380x380.jpg",
+      "about": "Cn, Контактов 2"
     },
     {
-      "name": "деталь 3",
-      "price": 100,
-      "type": "тип 2",
-      "brand": "BMW",
-      "cars": ["машина 4", "машина 5"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "name": "0001108203 Bosch",
+      "price": 9000,
+      "type": "Стартеры",
+      "brand": "LADA",
+      "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
+      "installation": 500,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/bosch/0001108203.1-380x380.jpg",
+      "about": "Напряжение (V) 12, KW 0.9, Направление вращения (R) ACR"
     },
     {
-      "name": "деталь 4",
-      "price": 100,
-      "type": "тип 1",
+      "name": "0986023780 Bosch",
+      "price": 7000,
+      "type": "Стартеры",
       "brand": "LADA",
-      "cars": ["машина 1", "машина 2"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
+      "installation": 500,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/bosch/0986023780-380x380.jpg",
+      "about": "Напряжение (V) 12, KW 0.9, Направление вращения (R) ACR"
     },
     {
-      "name": "деталь 5",
-      "price": 100,
-      "type": "тип 2",
+      "name": "KR9393P Krauf",
+      "price": 600,
+      "type": "Топливные насосы",
       "brand": "LADA",
-      "cars": ["машина 1", "машина 2"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
+      "installation": 0,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/krauf/KR9393P-380x380.jpg",
+      "about": "Bar, Давление 4.2"
     },
     {
-      "name": "деталь 6",
-      "price": 100,
-      "type": "тип 1",
+      "name": "0580453453 Bosch",
+      "price": 1800,
+      "type": "Топливные насосы",
       "brand": "LADA",
-      "cars": ["машина 1", "машина 2"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
+      "installation": 0,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/bosch/0580453453-380x380.jpg",
+      "about": "Bar, Давление 4.2"
     },
     {
-      "name": "деталь 7",
-      "price": 100,
-      "type": "тип 3",
-      "brand": "LADA",
-      "cars": ["машина 1", "машина 2"],
-      "installation": 50,
-      "image": "http://dacara.ru/wp-content/uploads/wpsc/category_images/dvigateli.png",
-      "about": "описание детали 1"
+      "name": "ALH3371 Krauf",
+      "price": 5000,
+      "type": "Генераторы",
+      "brand": "NISSAN",
+      "cars": ["ALMERA I (N15)", "ALMERA II (N16)", "PRIMERA (P11)", "PRIMERA (P12)"],
+      "installation": 250,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/krauf/ALH3371-380x380.jpg",
+      "about": "Напряжение (V) 12, Ампер 80"
+    },
+    {
+      "name": "STM1100 Krauf",
+      "price": 3000,
+      "type": "Стартеры",
+      "brand": "NISSAN",
+      "cars": ["ALMERA I (N15)", "ALMERA II (N16)", "PRIMERA (P11)", "PRIMERA (P12)"],
+      "installation": 150,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/krauf/STM1100-380x380.jpg",
+      "about": "Напряжение (V) 12"
+    },
+    {
+      "name": "111459 Cargo",
+      "price": 5000,
+      "type": "Стартеры",
+      "brand": "NISSAN",
+      "cars": ["ALMERA I (N15)", "ALMERA II (N16)", "PRIMERA (P11)", "PRIMERA (P12)"],
+      "installation": 150,
+      "image": "https://avtorai.com.ua/image/cache/catalog/product/cargo/111459-380x380.jpg",
+      "about": "Напряжение (V) 12"
     }
   ],
   "services": [
