@@ -70,12 +70,6 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(id, `Здравствуйте!`, mainKeyboard)
 })
 
-// Обработка команды /help
-bot.onText(/\/help/, (msg) => {
-    const { chat: { id } } = msg
-    bot.sendMessage(id, `Помощь`)
-})
-
 // Клавиатура
 bot.on('message', async msg => {
 
@@ -87,7 +81,9 @@ bot.on('message', async msg => {
     // Ответ на входящий текст
     switch(text){
         case 'Услуги':
-            //bot.sendMessage(id, `Здравствуйте!`, mainKeyboard)
+            const services = await ServiceController.uniqServiceType()
+            const servicesKeyboard = inlineKeyboard(services, "nothing")
+            bot.sendMessage(id, `Пожалуйста, выберите тип услуги`, {reply_markup:servicesKeyboard})
             break   
         case 'Запчасти':
             const brands = await PartController.uniqBrand()
@@ -96,27 +92,32 @@ bot.on('message', async msg => {
             break 
         case 'Ваши заказы':
             const orders = await OrderController.findOrdersById(id)
-            const orderChangeKeyboard = {
-                inline_keyboard: [
-                    [
-                        {
-                            text: 'Изменить',
-                            callback_data: JSON.stringify({
-                                addition: "change"
-                            })
-                        }
+            if (orders.length > 0) {
+                const orderChangeKeyboard = {
+                    inline_keyboard: [
+                        [
+                            {
+                                text: 'Изменить',
+                                callback_data: JSON.stringify({
+                                    addition: "change"
+                                })
+                            }
+                        ]
                     ]
-                ]
+                }
+                let answerText = "Ваши заказы:\n"
+    
+                orders.map((o, i) => {
+                    answerText = answerText + `${i+1}. ${o.part}: ${o.status}\n`
+                })
+                bot.sendMessage(id, answerText, {reply_markup:orderChangeKeyboard})
+            } else {
+                bot.sendMessage(id, "Вы еще ничего не заказали.")
             }
-            let answerText = ""
-
-            orders.map((o, i) => {
-                answerText = answerText + `${i+1}. ${o.part}: ${o.status}\n`
-            })
-            bot.sendMessage(id, answerText, {reply_markup:orderChangeKeyboard})
             break
         case 'О нас':
-            
+            bot.sendMessage(id, `СТО "Генстар"\nАдрес: 250-летия Донбасса проспект, 62\nНомера телефонов:\n+38 (050) 323-58-19 Viber\n+38 (050) 328-13-73\n+38 (071) 308-97-35\n+38 (071) 308-97-36`)
+            bot.sendLocation(id, 48.030787, 37.933752)
             break
         }
 })
@@ -130,6 +131,8 @@ bot.on('callback_query', async query => {
     const cars = await PartController.carsOfBrand({})
     // массив типов деталей
     const types = await PartController.typesOfParts({})
+    // массив типов услуг
+    const services = await ServiceController.uniqServiceType()
 
     // получаем id пользователя
     const { from: { id }, message: { message_id } } = query
@@ -187,55 +190,65 @@ bot.on('callback_query', async query => {
                     })
                 })
             } else {
-                // проверяем, какая команда пришла от пользователя
-                switch (addition) {
-                    // Подробнее
-                    case "more":
-                        const partMoreInfo = await PartController.partByName(text)
-                        const orderKeyboard = {
-                            inline_keyboard: [
-                                [
-                                    {
-                                        text: 'Заказать',
-                                        callback_data: JSON.stringify({
-                                            text: partMoreInfo.name,
-                                            addition: "order"
-                                        })
-                                    }
+                if (services.indexOf( text ) != -1) {
+                    const servicesOfType = await ServiceController.servisesByType(text)
+                    let answerText = `${text}\n`
+    
+                    servicesOfType.map((s, i) => {
+                        answerText = answerText + `${i+1}. ${s.name}\nот ${s.price} рублей\n`
+                    })
+                    bot.sendMessage(id, answerText)
+                } else {
+                    // проверяем, какая команда пришла от пользователя
+                    switch (addition) {
+                        // Подробнее
+                        case "more":
+                            const partMoreInfo = await PartController.partByName(text)
+                            const orderKeyboard = {
+                                inline_keyboard: [
+                                    [
+                                        {
+                                            text: 'Заказать',
+                                            callback_data: JSON.stringify({
+                                                text: partMoreInfo.name,
+                                                addition: "order"
+                                            })
+                                        }
+                                    ]
                                 ]
-                            ]
-                        }
-                        bot.editMessageCaption(`${partMoreInfo.name}\nЦена: ${partMoreInfo.price} руб.\nЦена установки: ${partMoreInfo.installation} руб. \nО детали: ${partMoreInfo.about}\nСовместима с ${partMoreInfo.cars.join(', ')}`, {chat_id:id, message_id:message_id, reply_markup:orderKeyboard})
-                        break
-                    // Заказать
-                    case "order":
-                        const answer = await OrderController.orderPart(id, text)
-                        bot.answerCallbackQuery(query.id, {text: answer})
-                        break
-                    // Удалить заказ
-                    case "remove":
-                        const removeAnswer = await OrderController.removeOrder(id, text)
-                        bot.answerCallbackQuery(query.id, {text: removeAnswer})
-                        const notDeliveredOrdersUpdate = await OrderController.findNotDeliveredOrdersById(id)
-                        const index = notDeliveredOrdersUpdate.indexOf(text)
-                        if (index !== -1) notDeliveredOrdersUpdate.splice(index, 1)
-                        if (notDeliveredOrdersUpdate.length > 0) {
-                            const partRemoveKeyboardUpdate = inlineKeyboard(notDeliveredOrdersUpdate, "remove")
-                            bot.editMessageText(`Вы заказали ${notDeliveredOrdersUpdate.length} деталей, которые еще не были доставлены.Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id, reply_markup:partRemoveKeyboardUpdate})
-                        } else {
-                            bot.editMessageText(`У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id})
-                        }
-                        break
-                    // Список заказанных запчастей с возможностью удаления
-                    case "change":
-                        const notDeliveredOrders = await OrderController.findNotDeliveredOrdersById(id)
-                        if (notDeliveredOrders.length > 0) {
-                            const partRemoveKeyboard = inlineKeyboard(notDeliveredOrders, "remove")
-                            bot.sendMessage(id, `Вы заказали ${notDeliveredOrders.length} деталей, которые еще не были доставлены. Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {reply_markup:partRemoveKeyboard})
-                        } else {
-                            bot.sendMessage(id, `У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`)
-                        }
-                        break
+                            }
+                            bot.editMessageCaption(`${partMoreInfo.name}\nЦена: ${partMoreInfo.price} руб.\nЦена установки: ${partMoreInfo.installation} руб. \nО детали: ${partMoreInfo.about}\nСовместима с ${partMoreInfo.cars.join(', ')}`, {chat_id:id, message_id:message_id, reply_markup:orderKeyboard})
+                            break
+                        // Заказать
+                        case "order":
+                            const answer = await OrderController.orderPart(id, text)
+                            bot.answerCallbackQuery(query.id, {text: answer})
+                            break
+                        // Удалить заказ
+                        case "remove":
+                            const removeAnswer = await OrderController.removeOrder(id, text)
+                            bot.answerCallbackQuery(query.id, {text: removeAnswer})
+                            const notDeliveredOrdersUpdate = await OrderController.findNotDeliveredOrdersById(id)
+                            const index = notDeliveredOrdersUpdate.indexOf(text)
+                            if (index !== -1) notDeliveredOrdersUpdate.splice(index, 1)
+                            if (notDeliveredOrdersUpdate.length > 0) {
+                                const partRemoveKeyboardUpdate = inlineKeyboard(notDeliveredOrdersUpdate, "remove")
+                                bot.editMessageText(`Вы заказали ${notDeliveredOrdersUpdate.length} деталей, которые еще не были доставлены.Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id, reply_markup:partRemoveKeyboardUpdate})
+                            } else {
+                                bot.editMessageText(`У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id})
+                            }
+                            break
+                        // Список заказанных запчастей с возможностью удаления
+                        case "change":
+                            const notDeliveredOrders = await OrderController.findNotDeliveredOrdersById(id)
+                            if (notDeliveredOrders.length > 0) {
+                                const partRemoveKeyboard = inlineKeyboard(notDeliveredOrders, "remove")
+                                bot.sendMessage(id, `Вы заказали ${notDeliveredOrders.length} деталей, которые еще не были доставлены. Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {reply_markup:partRemoveKeyboard})
+                            } else {
+                                bot.sendMessage(id, `У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`)
+                            }
+                            break
+                    }
                 }
             }
         }
@@ -243,7 +256,7 @@ bot.on('callback_query', async query => {
 })
 
 // формирование инлайн клавиатуры из массива
-function inlineKeyboard(buttons, addition, removeId = 0) {
+function inlineKeyboard(buttons, addition) {
     // формирование кнопок
     buttons = buttons.map(b => [
         { text: b, 
