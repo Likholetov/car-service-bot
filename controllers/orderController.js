@@ -31,20 +31,17 @@ class OrderController {
     }
 
     // Просмотр деталей, которые еще не доставлены
-    findNotDeliveredOrdersById(userId){
-        return Order.find({telegramId: userId, status: "не доставлено"})
-    }
-
-    // Запрос на количество недоставленных деталей
-    async findNotDeliveredOrdersAmountById(userId){
-        const amount = await Order.find({telegramId: userId, status: "не доставлено"})
-        return amount.length
+    async findNotDeliveredOrdersById(userId){
+        const noOrders = await Order.find({telegramId: userId, status: "не доставлено"})
+        const noOrdersList = []
+        noOrders.map(n => noOrdersList.push(n.part))
+        return noOrdersList
     }
 
     // Отмена заказа
     async removeOrder(userId, partName){
         const orderForRemove = await Order.findOne({telegramId: userId, part: partName, status: "не доставлено"})
-        orderForRemove.status = "отмена"
+        orderForRemove.status = "Отмена"
         orderForRemove.save()
         return `Заказ на ${partName} отменен`
     }

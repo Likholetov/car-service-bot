@@ -216,12 +216,11 @@ bot.on('callback_query', async query => {
                     case "remove":
                         const removeAnswer = await OrderController.removeOrder(id, text)
                         bot.answerCallbackQuery(query.id, {text: removeAnswer})
-                        const notDeliveredOrdersAmountCheck = await OrderController.findNotDeliveredOrdersAmountById(id)
-                        if (notDeliveredOrdersAmountCheck > 1) {
-                            const notDeliveredOrdersUpdate = await OrderController.findNotDeliveredOrdersById(id)
-                            const partRemoveListUpdate = []
-                            notDeliveredOrdersUpdate.map(n => partRemoveListUpdate.push(n.part))
-                            const partRemoveKeyboardUpdate = inlineKeyboard(partRemoveListUpdate, "remove")
+                        const notDeliveredOrdersUpdate = await OrderController.findNotDeliveredOrdersById(id)
+                        const index = notDeliveredOrdersUpdate.indexOf(text)
+                        if (index !== -1) notDeliveredOrdersUpdate.splice(index, 1)
+                        if (notDeliveredOrdersUpdate.length > 0) {
+                            const partRemoveKeyboardUpdate = inlineKeyboard(notDeliveredOrdersUpdate, "remove")
                             bot.editMessageText(`Вы заказали ${notDeliveredOrdersUpdate.length} деталей, которые еще не были доставлены.Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id, reply_markup:partRemoveKeyboardUpdate})
                         } else {
                             bot.editMessageText(`У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id})
@@ -231,9 +230,7 @@ bot.on('callback_query', async query => {
                     case "change":
                         const notDeliveredOrders = await OrderController.findNotDeliveredOrdersById(id)
                         if (notDeliveredOrders.length > 0) {
-                            const partRemoveList = []
-                            notDeliveredOrders.map(n => partRemoveList.push(n.part))
-                            const partRemoveKeyboard = inlineKeyboard(partRemoveList, "remove")
+                            const partRemoveKeyboard = inlineKeyboard(notDeliveredOrders, "remove")
                             bot.sendMessage(id, `Вы заказали ${notDeliveredOrders.length} деталей, которые еще не были доставлены. Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {reply_markup:partRemoveKeyboard})
                         } else {
                             bot.sendMessage(id, `У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`)
@@ -244,28 +241,6 @@ bot.on('callback_query', async query => {
         }
     }
 })
-
-/*bot.on('inline_query', query => {
-    const results = []
-
-    for (let index = 0; index < 3; index++) {
-        results.push({
-            id: index.toString(),
-            type: 'article',
-            title: `Title #${index}`,
-            input_message_content: {
-                message_text: `Article #${index} content`
-            }
-        })
-        
-    }
-
-    bot.answerInlineQuery(query.id, results, {
-        cache_time: 0,
-        switch_pm_text: 'Перейти к диалогу с ботом',
-        switch_pm_parameter: 'start'
-    })
-})*/
 
 // формирование инлайн клавиатуры из массива
 function inlineKeyboard(buttons, addition, removeId = 0) {
