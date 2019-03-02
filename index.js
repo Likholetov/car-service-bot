@@ -100,8 +100,6 @@ bot.on('message', async msg => {
         case 'О нас':
             
             break
-        //default:
-            //bot.sendMessage(id, `К сожалению, я не знаю такой команды`)
         }
 })
 
@@ -116,7 +114,7 @@ bot.on('callback_query', async query => {
     const types = await PartController.typesOfParts({})
 
     // получаем id пользователя
-    const { from: { id } } = query
+    const { from: { id }, message: { message_id } } = query
 
     // парсим входящий JSON
     let { data } = query
@@ -142,9 +140,62 @@ bot.on('callback_query', async query => {
             if (types.indexOf( text ) != -1) {
                 // пришел тип детали
                 const partsOfType = await PartController.partsOfType({type: text, cars: { $all: [addition] }})
-                console.log(partsOfType)
+                partsOfType.map(p => {
+                    const partText = `${p.name}\nЦена: ${p.price} руб.` 
+                    bot.sendPhoto(id, p.image, {
+                        caption: partText,
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: 'Подробнее',
+                                        callback_data: JSON.stringify({
+                                            text: p.name,
+                                            addition: "more"
+                                        })
+                                    }
+                                ],
+                                [
+                                    {
+                                        text: 'Заказать',
+                                        callback_data: JSON.stringify({
+                                            text: p.name,
+                                            addition: "order"
+                                        })
+                                    }
+                                ]
+                            ]
+                        }
+                    })
+                })
             } else {
-                
+                //console.log(text + " " + addition)
+                switch (addition) {
+                    case "more":
+                        const partMoreInfo = await PartController.partByName(text)
+                        const orderKeyboard = {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: 'Заказать',
+                                        callback_data: JSON.stringify({
+                                            text: partMoreInfo.name,
+                                            addition: "order"
+                                        })
+                                    }
+                                ]
+                            ]
+                        }
+                        bot.editMessageCaption(`${partMoreInfo.name}\nЦена: ${partMoreInfo.price} руб.\nЦена установки: ${partMoreInfo.installation} руб. \nО детали: ${partMoreInfo.about}\nСовместима с ${partMoreInfo.cars.join(', ')}`, {chat_id:id, message_id:message_id, reply_markup:orderKeyboard})
+                        break
+                    case "order":
+                        const answer = await OrderController.orderPart(id, text)
+                        bot.answerCallbackQuery(query.id, {text: answer})
+                        break
+                    case "remove":
+                        
+                        break
+                }
             }
         }
     }

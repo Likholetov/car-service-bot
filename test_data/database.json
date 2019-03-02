@@ -23,7 +23,7 @@
     {
       "name": "880186 Era",
       "price": 1200,
-      "type": "Катушки зажигания",
+      "type": "Катушки заж.",
       "brand": "KIA",
       "cars": ["CLARUS (K9A)", "MENTOR (FA)"],
       "installation": 0,
@@ -53,7 +53,7 @@
     {
       "name": "KR9393P Krauf",
       "price": 600,
-      "type": "Топливные насосы",
+      "type": "Топл. насосы",
       "brand": "LADA",
       "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
       "installation": 0,
@@ -63,7 +63,7 @@
     {
       "name": "0580453453 Bosch",
       "price": 1800,
-      "type": "Топливные насосы",
+      "type": "Топл. насосы",
       "brand": "LADA",
       "cars": ["KALINA (1117)", "KALINA (1118)", "KALINA (1119)", "PRIORA (2170)", "PRIORA (2172)"],
       "installation": 0,

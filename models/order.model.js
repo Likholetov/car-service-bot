@@ -1,14 +1,13 @@
 import { Schema, model } from 'mongoose';
-import partSchema from "./part.model";
 
 const OrderSchema = new Schema({
-    name: {
-        type: String,
+    telegramId: {
+        type: Number,
         required: true
     },
-    parts: {
-        type: [partSchema],
-        default: []
+    part: {
+        type: String,
+        required: true
     },
     status: {
         type: String,

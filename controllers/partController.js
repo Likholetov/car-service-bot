@@ -76,6 +76,11 @@ class PartController {
         // получаем из БД все детали
         return Part.find(type)
     }
+
+    // поиск детали по названию
+    partByName(name) {
+        return Part.findOne({name: name})
+    }
 }
 
 export default new PartController()
