@@ -19,7 +19,7 @@ const mainKeyboard = {
         resize_keyboard: true,
         keyboard: [
                 ['Услуги', 'Запчасти'],
-                ['Ваш заказ', 'О нас']
+                ['Ваши заказы', 'О нас']
             ]
     }
 }
@@ -94,8 +94,26 @@ bot.on('message', async msg => {
             const brandKeyboard = inlineKeyboard(brands, "nothing")
             bot.sendMessage(id, `Пожалуйста, выберите марку автомобиля`, {reply_markup:brandKeyboard})
             break 
-        case 'Ваш заказ':
-            
+        case 'Ваши заказы':
+            const orders = await OrderController.findOrdersById(id)
+            const orderChangeKeyboard = {
+                inline_keyboard: [
+                    [
+                        {
+                            text: 'Изменить',
+                            callback_data: JSON.stringify({
+                                addition: "change"
+                            })
+                        }
+                    ]
+                ]
+            }
+            let answerText = ""
+
+            orders.map((o, i) => {
+                answerText = answerText + `${i+1}. ${o.part}: ${o.status}\n`
+            })
+            bot.sendMessage(id, answerText, {reply_markup:orderChangeKeyboard})
             break
         case 'О нас':
             
@@ -169,8 +187,9 @@ bot.on('callback_query', async query => {
                     })
                 })
             } else {
-                //console.log(text + " " + addition)
+                // проверяем, какая команда пришла от пользователя
                 switch (addition) {
+                    // Подробнее
                     case "more":
                         const partMoreInfo = await PartController.partByName(text)
                         const orderKeyboard = {
@@ -188,23 +207,42 @@ bot.on('callback_query', async query => {
                         }
                         bot.editMessageCaption(`${partMoreInfo.name}\nЦена: ${partMoreInfo.price} руб.\nЦена установки: ${partMoreInfo.installation} руб. \nО детали: ${partMoreInfo.about}\nСовместима с ${partMoreInfo.cars.join(', ')}`, {chat_id:id, message_id:message_id, reply_markup:orderKeyboard})
                         break
+                    // Заказать
                     case "order":
                         const answer = await OrderController.orderPart(id, text)
                         bot.answerCallbackQuery(query.id, {text: answer})
                         break
+                    // Удалить заказ
                     case "remove":
-                        
+                        const removeAnswer = await OrderController.removeOrder(id, text)
+                        bot.answerCallbackQuery(query.id, {text: removeAnswer})
+                        const notDeliveredOrdersAmountCheck = await OrderController.findNotDeliveredOrdersAmountById(id)
+                        if (notDeliveredOrdersAmountCheck > 1) {
+                            const notDeliveredOrdersUpdate = await OrderController.findNotDeliveredOrdersById(id)
+                            const partRemoveListUpdate = []
+                            notDeliveredOrdersUpdate.map(n => partRemoveListUpdate.push(n.part))
+                            const partRemoveKeyboardUpdate = inlineKeyboard(partRemoveListUpdate, "remove")
+                            bot.editMessageText(`Вы заказали ${notDeliveredOrdersUpdate.length} деталей, которые еще не были доставлены.Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id, reply_markup:partRemoveKeyboardUpdate})
+                        } else {
+                            bot.editMessageText(`У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {chat_id:id, message_id:message_id})
+                        }
+                        break
+                    // Список заказанных запчастей с возможностью удаления
+                    case "change":
+                        const notDeliveredOrders = await OrderController.findNotDeliveredOrdersById(id)
+                        if (notDeliveredOrders.length > 0) {
+                            const partRemoveList = []
+                            notDeliveredOrders.map(n => partRemoveList.push(n.part))
+                            const partRemoveKeyboard = inlineKeyboard(partRemoveList, "remove")
+                            bot.sendMessage(id, `Вы заказали ${notDeliveredOrders.length} деталей, которые еще не были доставлены. Выберите деталь, заказ на которую Вы хотели бы отменить. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`, {reply_markup:partRemoveKeyboard})
+                        } else {
+                            bot.sendMessage(id, `У вас нет заказов, которые еще не были доставлены. Заказ на доставленную деталь отменить нельзя, для этого свяжитесь с менеджером по телефону или в Telegram.`)
+                        }
                         break
                 }
             }
         }
     }
-
-    //const cars = await PartController.carsOfBrand({brand: "LADA"})
-    
-    //console.log(cars)
-
-
 })
 
 /*bot.on('inline_query', query => {
@@ -230,7 +268,7 @@ bot.on('callback_query', async query => {
 })*/
 
 // формирование инлайн клавиатуры из массива
-function inlineKeyboard(buttons, addition) {
+function inlineKeyboard(buttons, addition, removeId = 0) {
     // формирование кнопок
     buttons = buttons.map(b => [
         { text: b, 
