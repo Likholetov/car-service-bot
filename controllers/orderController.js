@@ -1,9 +1,7 @@
 import mongoose from 'mongoose'
 import _ from 'lodash'
 import '../models/order.model'
-import '../models/part.model'
 
-const Part = mongoose.model('parts')
 const Order = mongoose.model('orders')
 
 class OrderController {

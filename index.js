@@ -76,21 +76,25 @@ bot.on('message', async msg => {
     // Получаем данные о пользователе
     const { chat: { id }, text, from: {first_name, last_name} } = msg
 
+    // Выводим данные о пользователе в консоль
     console.log(`Message from ${first_name} ${last_name}, id: ${id}`)
     
     // Ответ на входящий текст
     switch(text){
         case 'Услуги':
+            // получаем список типов услуг
             const services = await ServiceController.uniqServiceType()
             const servicesKeyboard = inlineKeyboard(services, "nothing")
             bot.sendMessage(id, `Пожалуйста, выберите тип услуги`, {reply_markup:servicesKeyboard})
             break   
         case 'Запчасти':
+            // Получаем список марок машин
             const brands = await PartController.uniqBrand()
             const brandKeyboard = inlineKeyboard(brands, "nothing")
             bot.sendMessage(id, `Пожалуйста, выберите марку автомобиля`, {reply_markup:brandKeyboard})
             break 
         case 'Ваши заказы':
+            // Выводим пользователю его заказы
             const orders = await OrderController.findOrdersById(id)
             if (orders.length > 0) {
                 const orderChangeKeyboard = {
@@ -116,6 +120,7 @@ bot.on('message', async msg => {
             }
             break
         case 'О нас':
+            // Выводим пользователю информацию об СТО
             bot.sendMessage(id, `СТО "Генстар"\nАдрес: 250-летия Донбасса проспект, 62\nНомера телефонов:\n+38 (050) 323-58-19 Viber\n+38 (050) 328-13-73\n+38 (071) 308-97-35\n+38 (071) 308-97-36`)
             bot.sendLocation(id, 48.030787, 37.933752)
             break
@@ -191,6 +196,7 @@ bot.on('callback_query', async query => {
                 })
             } else {
                 if (services.indexOf( text ) != -1) {
+                    // пришел тип услуги
                     const servicesOfType = await ServiceController.servisesByType(text)
                     let answerText = `${text}\n`
     
