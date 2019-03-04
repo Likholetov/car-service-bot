@@ -17,5 +17,5 @@ mongoose.connect(config.get('db_url'), {
     .catch((err) => console.log(err))
 
 // filling DB with test data
-database.services.forEach(s => new Service(s).save().catch(e => console.log(e)))
 database.parts.forEach(p => new Part(p).save().catch(e => console.log(e)))
+database.services.forEach(s => new Service(s).save().catch(e => console.log(e)))
