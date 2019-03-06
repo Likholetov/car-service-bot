@@ -201,7 +201,7 @@ bot.on('callback_query', async query => {
                     let answerText = `${text}\n`
     
                     servicesOfType.map((s, i) => {
-                        answerText = answerText + `${i+1}. ${s.name}\nот ${s.price} рублей\n`
+                        answerText = answerText + `${i+1}. ${s.name} от ${s.price} рублей\n`
                     })
                     bot.sendMessage(id, answerText)
                 } else {
