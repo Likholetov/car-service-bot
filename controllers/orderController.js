@@ -7,10 +7,15 @@ const Order = mongoose.model('orders')
 class OrderController {
     // добавление детали в заказ
     orderPart(userId, partName){
+
+        // сегодняшняя дата
+        let now = new Date();
+
         // создаем заказ
         const order = new Order({
             telegramId: userId,
-            part: partName
+            part: partName,
+            date: now
         })
 
         // сохраниение нового заказа

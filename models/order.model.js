@@ -9,6 +9,9 @@ const OrderSchema = new Schema({
         type: String,
         required: true
     },
+    date: { 
+        type: Date
+    },
     status: {
         type: String,
         default: "не доставлено"
