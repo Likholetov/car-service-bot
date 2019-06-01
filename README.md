@@ -1,20 +1,21 @@
 # car-service-bot
 Telegram bot for car service.
 
-Platform: Node.js 
+Platform: Node.js
 
-Thanks to: [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api) 
+Thanks to: [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
 
 ## How to use the bot
 
 * Clone/Download/Fork the repository
 * ```yarn```
-* Create a Bot Account 
+* Create a Bot Account
     * Get the associated token (https://core.telegram.org/bots/#botfather)
-* Remove part "-example" in config-example.js
+* In folder config remove part "-example" in default-example.js
 * Edit config.js
-    * Set ```YOUR_TELEGRAM_BOT_TOKEN``` with the auth token of your bot
-    * Set ```MONGODB_URL``` with your MongoDB url
+    * Set ```YOUR_URL_HERE``` with the https url for webhook
+    * Set ```YOUR_TOKEN_HERE``` with the auth token of your bot
+    * Set ```YOUR_MONGODB_URL_HERE``` with your MongoDB url
 * Run the bot
-    * ```yarn run start``` 
+    * ```yarn run start```
     * Stop it at any time with CTRL+C
