@@ -54,23 +54,6 @@ class PartController {
         return types
     }
 
-        // получение типов деталей конкретной модели
-    async typesOfParts(car) {
-        // получаем из БД все детали
-        const parts = await Part.find(car)
-          
-        // массив для марок
-        let types = []
-    
-        // формирование массива брендов
-        parts.map(p => types.push(p.type))
-    
-        // удаление повторяющихся типов
-        types = _.uniq(types);
-    
-        return types
-    }
-
     // получение деталей конкретного типа
     partsOfType(type) {
         // получаем из БД все детали
